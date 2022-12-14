@@ -28,7 +28,7 @@ async function run(){
             res.send(users);
         })
 
-        // U - Update of CRUD operations
+        // U - Show in the input form for update of CRUD operations
         app.get('/user/:id', async (req,res) =>{
             const id = req.params.id;
             const query = {_id: ObjectId(id)};
@@ -44,6 +44,25 @@ async function run(){
             const result = await userCollection.insertOne(user)
             res.send(result);
         })
+
+        // U - Update of CRUD operation
+        app.put('/users/:id', async (req, res)=>{
+            const id = req.params.id;
+            const filter = {_id: ObjectId(id)};
+            const user = req.body;
+            const option = {upsert: true}
+            const updatedUser = {
+                $set:{
+                    name: user.name,
+                    address: user.address,
+                    email: user.email
+                }
+            }
+            const result = await userCollection.updateOne(filter, updatedUser, option)
+            res.send(result); 
+            // console.log(user); 
+        })
+
 
         // D - Delete of CRUD operations
         app.delete('/users/:id', async (req, res)=>{
